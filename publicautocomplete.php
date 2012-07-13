@@ -6,7 +6,25 @@ require_once 'publicautocomplete.civix.php';
  * Implementation of hook_civicrm_config
  */
 function publicautocomplete_civicrm_config(&$config) {
+  $path =  dirname( __FILE__ );
+  set_include_path(get_include_path() . PATH_SEPARATOR . $path);
   _publicautocomplete_civix_civicrm_config($config);
+}
+
+function publicautocomplete_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions) {
+  $permissions['contact']['publicget'] = array('access AJAX API');
+}
+
+function publicautocomplete_civicrm_buildForm($formName, &$form) {
+  // I would have used drupal_add_js, but isn't cross CMS
+  // any idea to avoid hacking and adding the html on the pre-help field?
+  $forms = array('CRM_Profile_Form_Edit','CRM_Event_Form_Registration_Register');
+   if (!in_array ($formName,$forms))
+    return;
+  reset($form->_fields);
+  $first_key = key($form->_fields);
+  $file =  dirname( __FILE__ ) . '/js/public.autocomplete.js';
+  $form->_fields[$first_key]['groupHelpPre'] .= file_get_contents($file);
 }
 
 /**
