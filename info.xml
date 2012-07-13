@@ -3,7 +3,7 @@
   <downloadUrl>http://FIXME/eu.tttp.publicautocomplete.zip</downloadUrl>
   <file>publicautocomplete</file>
   <name>public autocomplete field</name>
-  <description>This extension allows an anonymous user to have an autocomplete field instead of a free form one, to avoid mispelled/duplicate organisation names due to the current employer</description>
+  <description>This extension allows an anonymous user to have an autocomplete field instead of a free form one, to avoid mispelled/duplicate organisation names on the current employer</description>
   <license>agpl 3</license>
   <maintainer>
     <author>Xavier Dutoit</author>
@@ -15,7 +15,7 @@
   <compatibility>
     <ver>4.1</ver>
   </compatibility>
-  <comments>This needs some configuration change on your civicrm.settings.php</comments>
+  <comments>This needs some configuration change on your civicrm.settings.php. Read the README.md</comments>
   <civix>
     <namespace>CRM/Publicautocomplete</namespace>
   </civix>
