@@ -5,8 +5,16 @@
 */
 
 function civicrm_api3_contact_publicget ($params) {
-  $params['contact_type'] = 'Organization';
-  $params['return']= 'sort_name,nick_name,country';
-  $params['sequential'] = 1;
-  return civicrm_api ('Contact','Get',$params);
+  $custom= CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'params');
+  if (!$custom) {
+    $custom = array (
+      'contact_type' => 'Organization',
+      'return' => 'sort_name,nick_name,country'
+    );
+  }
+
+  $custom['sort_name'] = $params['sort_name'];
+  $custom['sequential'] = 1;
+  $custom['version'] = 3;
+  return civicrm_api ('Contact','Get',$custom);
 }

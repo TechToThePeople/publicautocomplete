@@ -17,7 +17,7 @@ function publicautocomplete_civicrm_alterAPIPermissions($entity, $action, &$para
 
 function publicautocomplete_civicrm_buildForm($formName, &$form) {
   // I would have used drupal_add_js, but isn't cross CMS
-  // any idea to avoid hacking and adding the html on the pre-help field?
+  // @TODO any idea to avoid hacking and adding the html on the pre-help field?
   $forms = array('CRM_Profile_Form_Edit','CRM_Event_Form_Registration_Register');
    if (!in_array ($formName,$forms))
     return;
