@@ -21,6 +21,9 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
   $forms = array('CRM_Profile_Form_Edit','CRM_Event_Form_Registration_Register');
    if (!in_array ($formName,$forms))
     return;
+  if (!CRM_Core_Permission::check('access CiviCRM') && !CRM_Core_Permission::check('access AJAX API') )
+    return;
+
   reset($form->_fields);
   $first_key = key($form->_fields);
   $file =  dirname( __FILE__ ) . '/js/public.autocomplete.js';
