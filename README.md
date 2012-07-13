@@ -40,5 +40,17 @@ the return param is important, always specify only the fields you want to displa
 You can filter by group, tag, contact type, tag, custom field... pretty much everything you want. Look at eexamples from the contact api, that's the same params. 
  
 
+It relies on the api contact get, and only search on sort_name. If you need something else, you can modify the api/v3/Contact/Publicget.php and do whatever you want
 
+Test & Access right
+===================
 
+To test, connect as a user having access to civicrm, create an event with a profile that contains a current employer field.
+
+If everything is properly installed, you should have an autocomplete instead of a free form. 
+
+You can now grant "'access AJAX API" to anonymous users (or the users that needs to have the autocomplete) and voila.
+
+Support and Evolutions
+=====================
+Ask in the extensions forum on civicrm.org. In general, if you have an idea and the skills to implement it (or the budget to make it happen), it will be added and I might burn a candle while chanting your name as a mantra, or tatoo it on my left shoulder.
