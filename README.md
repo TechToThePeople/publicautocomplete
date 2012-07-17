@@ -29,10 +29,10 @@ So you do want to customise the list and restrict to a subset only? Good, that's
 You need to add in your civicrm.settings.php a new config variable
  global $civicrm_setting;
 
-$civicrm_setting['eu.tttp.publicautocomplete']['params'] = array('contact_type'=> 'Organisation',
+$civicrm_setting['eu.tttp.publicautocomplete']['params'] = array('contact_type'=> 'Organization',
 'contact_sub_type' => 'members',
 'group' => 42, // active groups
-return=>'sort_name,nick_name,country');
+'return'=>'sort_name,nick_name,country');
 
 the return param is important, always specify only the fields you want to display. Eg. avoid email probably.
 
