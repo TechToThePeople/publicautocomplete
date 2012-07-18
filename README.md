@@ -10,8 +10,6 @@ Install
 
 git clone https://github.com/TechToThePeople/publicautocomplete.git in your local extension repository and it should work
 
-I'll provide a zip soon
-
 you need to patch js/rest.js from CRM-10524 if you are not running from trunk
 
 Configuration

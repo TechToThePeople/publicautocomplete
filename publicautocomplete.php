@@ -28,8 +28,11 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
 
 // I would have used drupal_add_js, but isn't cross CMS. Poor's man replacement
 function publicautocomplete_civicrm_add_js($tpl_source, &$smarty) {
-    $file =  dirname( __FILE__ ) . '/js/public.autocomplete.js';
-    return '<script>'.file_get_contents($file) .'</script>' .$tpl_source;
+  static $file = null;
+  if ($file)
+    return; // be sure to inject only once
+  $file =  dirname( __FILE__ ) . '/js/public.autocomplete.js';
+  return '<script>'.file_get_contents($file) .'</script>' .$tpl_source;
 }
 
 

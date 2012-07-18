@@ -40,7 +40,7 @@ function _publicautocomplete_civix_civicrm_xmlMenu(&$files) {
  * Implementation of hook_civicrm_install
  */
 function _publicautocomplete_civix_civicrm_install() {
-  _foo_civix_civicrm_config();
+  _publicautocomplete_civix_civicrm_config();
   if ($upgrader = _publicautocomplete_civix_upgrader()) {
     return $upgrader->onInstall();
   }
@@ -50,7 +50,7 @@ function _publicautocomplete_civix_civicrm_install() {
  * Implementation of hook_civicrm_uninstall
  */
 function _publicautocomplete_civix_civicrm_uninstall() {
-  _foo_civix_civicrm_config();
+  _publicautocomplete_civix_civicrm_config();
   if ($upgrader = _publicautocomplete_civix_upgrader()) {
     return $upgrader->onUninstall();
   }
