@@ -6,9 +6,10 @@ require_once 'publicautocomplete.civix.php';
  * Implementation of hook_civicrm_config
  */
 function publicautocomplete_civicrm_config(&$config) {
+  //don't need smarty templates path
+  //  _publicautocomplete_civix_civicrm_config($config);
   $path =  dirname( __FILE__ );
   set_include_path(get_include_path() . PATH_SEPARATOR . $path);
-  _publicautocomplete_civix_civicrm_config($config);
 }
 
 function publicautocomplete_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions) {
@@ -17,7 +18,7 @@ function publicautocomplete_civicrm_alterAPIPermissions($entity, $action, &$para
 
 function publicautocomplete_civicrm_buildForm($formName, &$form) {
   $forms = array('CRM_Profile_Form_Edit','CRM_Event_Form_Registration_Register');
-   if (!in_array ($formName,$forms))
+  if (!in_array ($formName,$forms))
     return;
   if (!CRM_Core_Permission::check('access CiviCRM') && !CRM_Core_Permission::check('access AJAX API') )
     return;
@@ -26,21 +27,11 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
 }
 
 // I would have used drupal_add_js, but isn't cross CMS. Poor's man replacement
-function publicautocomplete_civicrm_add_js($tpl_source, &$smarty)
-{
+function publicautocomplete_civicrm_add_js($tpl_source, &$smarty) {
     $file =  dirname( __FILE__ ) . '/js/public.autocomplete.js';
     return '<script>'.file_get_contents($file) .'</script>' .$tpl_source;
 }
 
-
-/**
- * Implementation of hook_civicrm_xmlMenu
- *
- * @param $files array(string)
- */
-function publicautocomplete_civicrm_xmlMenu(&$files) {
-  _publicautocomplete_civix_civicrm_xmlMenu($files);
-}
 
 /**
  * Implementation of hook_civicrm_install
