@@ -10,10 +10,10 @@
     <email>xavier@tttp.eu</email>
   </maintainer>
   <releaseDate>2012-07-13</releaseDate>
-  <version>1.0</version>
-  <develStage>alpha</develStage>
+  <version>1.2</version>
+  <develStage>stable</develStage>
   <compatibility>
-    <ver>4.1</ver>
+    <ver>4.5</ver>
   </compatibility>
   <comments>This needs some configuration change on your civicrm.settings.php. Read the README.md</comments>
   <civix>

@@ -2,18 +2,18 @@
 
 require_once 'publicautocomplete.civix.php';
 
+
 /**
  * Implementation of hook_civicrm_config
  */
 function publicautocomplete_civicrm_config(&$config) {
-  //don't need smarty templates path
-  //  _publicautocomplete_civix_civicrm_config($config);
-  $path =  dirname( __FILE__ );
-  set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+  $extRoot = dirname( __FILE__ ) . DIRECTORY_SEPARATOR;
+  $include_path = $extRoot . PATH_SEPARATOR . get_include_path( );
+  set_include_path( $include_path );
 }
 
 function publicautocomplete_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions) {
-  $permissions['contact']['publicget'] = array('access AJAX API');
+  $permissions['contact']['getpublic'] = array('access AJAX API');
 }
 
 function publicautocomplete_civicrm_buildForm($formName, &$form) {
@@ -22,18 +22,7 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
     return;
   if (!CRM_Core_Permission::check('access CiviCRM') && !CRM_Core_Permission::check('access AJAX API') )
     return;
-  $smarty = CRM_Core_Smarty::singleton();
-  $smarty->register_postfilter('publicautocomplete_civicrm_add_js');
-  //$smarty->register_compiler_function('publicautocomplete_civicrm_add_js','publicautocomplete_civicrm_add_js');
-}
-
-// I would have used drupal_add_js, but isn't cross CMS. Poor's man replacement
-function publicautocomplete_civicrm_add_js($tpl_source, &$smarty) {
-  static $file = null;
-  if ($file)
-    return; // be sure to inject only once
-  $file =  dirname( __FILE__ ) . '/js/public.autocomplete.js';
-  return $smarty->_current_file.$tpl_source.'<script>'.file_get_contents($file) .'</script>';
+  CRM_Core_Resources::singleton()->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete.js');
 }
 
 
