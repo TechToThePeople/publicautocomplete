@@ -18,10 +18,12 @@ function publicautocomplete_civicrm_alterAPIPermissions($entity, $action, &$para
 
 function publicautocomplete_civicrm_buildForm($formName, &$form) {
   $forms = array('CRM_Profile_Form_Edit','CRM_Event_Form_Registration_Register');
-  if (!in_array ($formName,$forms))
+  if (!in_array ($formName,$forms)) {
     return;
-  if (!CRM_Core_Permission::check('access CiviCRM') && !CRM_Core_Permission::check('access AJAX API') )
+  }
+  if (!CRM_Core_Permission::check('access CiviCRM') && !CRM_Core_Permission::check('access AJAX API') ) {
     return;
+  }
   CRM_Core_Resources::singleton()->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete.js');
 }
 

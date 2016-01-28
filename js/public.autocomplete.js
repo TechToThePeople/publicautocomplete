@@ -2,12 +2,12 @@ cj(function($) {
   $('#current_employer')
     .autocomplete({
       source: function(request, response) {
-        CRM.api3('contact', 'getpublic').done(function(result) {
+        CRM.api3('contact', 'getpublic', {'term': request.term}).done(function(result) {
           var ret = [];
-console.log (result);
+          console.log (result);
           if (result.values) {
             $.each(result.values, function(k, v) {
-              ret.push({value: v.sort_name});
+              ret.push({value: v.organization_name});
             })
           }
           response(ret);
@@ -17,17 +17,7 @@ console.log (result);
         return false;
       }, 
       select: function (event, ui) {
-console.log(ui.item);
-
-//        document.location = CRM.url('civicrm/contact/view', {reset: 1, cid: ui.item.value});
-//        return false;
-      },
-      create: function() {
-        // Place menu in front
-//        $(this).autocomplete('widget').css('z-index', $('#civicrm-menu').css('z-index'));
+        console.log(ui.item);
       }
     })
-    .keydown(function() {
-//      $.Menu.closeAll();
-    });
 });

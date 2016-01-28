@@ -13,7 +13,9 @@ function civicrm_api3_contact_getpublic ($params) {
     );
   }
 
-  $custom['sort_name'] = $params['sort_name'];
+  $custom['organization_name'] = array(
+      'LIKE' => '%'. $params['term'] .'%',
+  );
   $custom['sequential'] = 1;
   $custom['version'] = 3;
   return civicrm_api ('Contact','Get',$custom);
