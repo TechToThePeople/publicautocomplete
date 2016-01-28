@@ -3,6 +3,10 @@
 require_once 'publicautocomplete.civix.php';
 
 
+function _publicautocomplete_supported_forms() {
+  return array('CRM_Profile_Form_Edit','CRM_Event_Form_Registration_Register');
+}
+
 /**
  * Implementation of hook_civicrm_config
  */
@@ -17,7 +21,7 @@ function publicautocomplete_civicrm_alterAPIPermissions($entity, $action, &$para
 }
 
 function publicautocomplete_civicrm_buildForm($formName, &$form) {
-  $forms = array('CRM_Profile_Form_Edit','CRM_Event_Form_Registration_Register');
+  $forms = _publicautocomplete_supported_forms();
   if (!in_array ($formName,$forms)) {
     return;
   }
@@ -25,8 +29,38 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
     return;
   }
   CRM_Core_Resources::singleton()->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete.js');
+
+  $vars = array(
+    'require_match' => CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'require_match'),
+    'required_error' => ts('%1 must be an existing organization name.', $form->_fields['current_employer']['title']),
+  );
+  CRM_Core_Resources::singleton()->addVars('eu.tttp.publicautocomplete', $vars);
 }
 
+/**
+ * Implements hook_civicrm_validateForm().
+ */
+function publicautocomplete_civicrm_validateForm($formName, &$fields, &$files, &$form, &$errors) {
+  $forms = _publicautocomplete_supported_forms();
+  if (!in_array ($formName,$forms)) {
+    return;
+  }
+  if (CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'require_match') !== TRUE) {
+    return;
+  }
+  $organization_name = CRM_Utils_Array::value('current_employer', $fields);
+  if (!$organization_name) {
+    return;
+  }
+  $api_params = array(
+    'term' => $organization_name,
+    'version' => 3,
+  );
+  $result =  civicrm_api('Contact','Getpublic',$api_params);
+  if ($result['count'] == 0) {
+    $errors['current_employer'] = ts('%1 must be an existing organization name.', $form->_fields['current_employer']['title']);
+  }
+}
 
 /**
  * Implementation of hook_civicrm_install

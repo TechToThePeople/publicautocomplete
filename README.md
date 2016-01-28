@@ -37,7 +37,11 @@ the return param is important, always specify only the fields you want to displa
 You can filter by group, tag, contact type, tag, custom field... pretty much everything you want. Look at eexamples from the contact api, that's the same params. 
  
 
-It relies on the api contact get, and only search on sort_name. If you need something else or want to debug, you can modify the api/v3/Contact/Publicget.php and do whatever you want
+It relies on the api contact get, and only search on organization_name. If you need something else or want to debug, you can modify the api/v3/Contact/Publicget.php and do whatever you want.
+
+You can also force the user to submit only a value from the list (or leave to leave it blank), thereby preventing the user from creating new organization records. To enable this setting, add this to civicrm.settings.php:
+$civicrm_setting['eu.tttp.publicautocomplete']['require_match'] = TRUE;
+
 
 Test & Access right
 ===================
