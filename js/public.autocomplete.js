@@ -29,9 +29,9 @@ var publicautocomplete = {
       // Array to hold properties that will be concatenated.
       var text_values = [];
       for (i in properties) {
-        var component = obj[properties[i]].replace(' ','')
+        var component = obj[properties[i]];
         // Only include the property if it's not an empty value.
-        if (component.length) {
+        if (! this.isEmpty(component)) {
           text_values.push(component)
         }
       }
@@ -41,6 +41,16 @@ var publicautocomplete = {
     else {
       return obj[properties[0]];
     }
+  },
+
+  /**
+   * Test if the given string is empty or null.
+   */
+  'isEmpty': function(str) {
+    if (typeof str === 'undefined' || str == null) {
+      return true;
+    }
+    return str.replace(/\s/g, '').length < 1;
   }
 };
 
