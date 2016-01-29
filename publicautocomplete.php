@@ -2,7 +2,9 @@
 
 require_once 'publicautocomplete.civix.php';
 
-
+/**
+ * Get an array of CiviCRM forms supported by this extension.
+ */
 function _publicautocomplete_supported_forms() {
   return array('CRM_Profile_Form_Edit','CRM_Event_Form_Registration_Register');
 }
@@ -20,17 +22,27 @@ function publicautocomplete_civicrm_alterAPIPermissions($entity, $action, &$para
   $permissions['contact']['getpublic'] = array('access AJAX API');
 }
 
+/**
+ * Implements hook_civicrm_buildForm().
+ */
 function publicautocomplete_civicrm_buildForm($formName, &$form) {
+  // Return void if this isn't one of the supported CiviCRM forms.
   $forms = _publicautocomplete_supported_forms();
   if (!in_array ($formName,$forms)) {
     return;
   }
+  // Return void if we don't have permission.
   if (!CRM_Core_Permission::check('access CiviCRM') && !CRM_Core_Permission::check('access AJAX API') ) {
     return;
   }
+  // Add the necessary javascript file.
   CRM_Core_Resources::singleton()->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete.js');
 
+  // Define some parameters to pass to JavaScript.
+  $autocomplete_params = CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'params');
+  $returnProperties = explode(',', str_replace(' ', '', $autocomplete_params['return']));
   $vars = array(
+    'return_properties' => $returnProperties,
     'require_match' => CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'require_match'),
     'required_error' => ts('%1 must be an existing organization name.', $form->_fields['current_employer']['title']),
   );

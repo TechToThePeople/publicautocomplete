@@ -13,9 +13,24 @@ function civicrm_api3_contact_getpublic ($params) {
     );
   }
 
-  $custom['organization_name'] = array(
-      'LIKE' => '%'. $params['term'] .'%',
-  );
+  // Determine column to search in, defaulting to sort_name.
+  $match_column = CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'match_column');
+  if (!$match_column) {
+    $match_column = 'sort_name';
+  }
+
+  // Some columns are automatically searched using LIKE '%term%'. For those,
+  // we just use the search term; but for any other columns, specify LIKE.
+  $like_names = array('sort_name', 'email', 'note', 'display_name');
+  if (in_array($match_column, $like_names)) {
+    $custom[$match_column] = $params['term'];
+  }
+  else {
+    $custom[$match_column] = array(
+        'LIKE' => '%'. $params['term'] .'%',
+    );
+  }
+  
   $custom['sequential'] = 1;
   $custom['version'] = 3;
   return civicrm_api ('Contact','Get',$custom);

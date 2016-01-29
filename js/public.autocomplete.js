@@ -1,6 +1,7 @@
 var publicautocomplete = {
   // Array of all matched values that have been returned as autocomplete options
   'matchedValues': [],
+
   /**
    * Test whether the value of current_employer field is valid.
    * True if the current value is blank or appears in this.matchedValues; otherwise
@@ -9,6 +10,37 @@ var publicautocomplete = {
   'isValid': function() {
     value = cj('#current_employer').val()
     return (value.length == 0 || (this.matchedValues.hasOwnProperty(value) && this.matchedValues[value]));
+  },
+
+  /**
+   * Build the label for an option by concatenating the specified members of the
+   * given object.
+   *
+   * @param obj The object from which to take the values.
+   * @param properties Array of obj properties to incluede in the label.
+   *
+   * @return String
+   */
+  'buildLabel': function(obj, properties) {
+    // If there are multiple properties, string them together with a separator.
+    if (properties.length > 1) {
+      // Separator to use for concatenation.
+      var separator = ' :: ';
+      // Array to hold properties that will be concatenated.
+      var text_values = [];
+      for (i in properties) {
+        var component = obj[properties[i]].replace(' ','')
+        // Only include the property if it's not an empty value.
+        if (component.length) {
+          text_values.push(component)
+        }
+      }
+      return text_values.join(separator);
+    }
+    // Otherwise, there's only one property to list, so just use that one.
+    else {
+      return obj[properties[0]];
+    }
   }
 };
 
@@ -21,13 +53,14 @@ cj(function($) {
         ret = [];
         if (result.values.length > 0) {
           // Loop through the values returned by the AJAX call.
-          $.each(result.values, function(k, v) {
-            var display_value = v.organization_name;
+          $.each(result.values, function(k, v) {            
+            var label = publicautocomplete.buildLabel(v, CRM.vars['eu.tttp.publicautocomplete'].return_properties);
+            var value = v[CRM.vars['eu.tttp.publicautocomplete'].return_properties[0]]
             // Store the value in the matchedValues array so we can use it for
             // validation in isValid().
-            publicautocomplete.matchedValues[display_value] = true;
-            // Add the value to the list of autocomplete options.
-            ret.push({'value': display_value});
+            publicautocomplete.matchedValues[value] = true;
+            // Add the value/label pair to the list of autocomplete options.
+            ret.push({'value': value, 'label': label});
           })
         }
         // Return the list of autocomplete options.
