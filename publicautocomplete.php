@@ -57,6 +57,22 @@ function _publicautocomplete_get_setting($name) {
 }
 
 /**
+ * Add given key-value pairs to CRM object in Javasript.
+ */
+function _publicautocomplete_addVarsToJavascript($vars) {
+  $resource = CRM_Core_Resources::singleton();
+
+  // CiviCRM 4.5 and above
+  if (method_exists($resource, 'addVars')) {
+    $resource->addVars('eu.tttp.publicautocomplete', $vars);
+  }
+  // CiviCRM 4.4
+  elseif (method_exists($resource, 'addSetting')) {
+    $resource->addSetting(array('vars' => array('eu.tttp.publicautocomplete' => $vars)));
+  }
+}
+
+/**
  * Implementation of hook_civicrm_config
  */
 function publicautocomplete_civicrm_config(&$config) {
@@ -93,7 +109,7 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
     'require_match' => _publicautocomplete_get_setting('require_match'),
     'required_error' => ts('%1 must be an existing organization name.', $form->_fields['current_employer']['title']),
   );
-  CRM_Core_Resources::singleton()->addVars('eu.tttp.publicautocomplete', $vars);
+  _publicautocomplete_addVarsToJavascript($vars);
 }
 
 /**
