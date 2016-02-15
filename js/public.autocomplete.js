@@ -1,6 +1,6 @@
 var publicautocomplete = {
   // Array of all matched values that have been returned as autocomplete options
-  'matchedValues': [],
+  'matchedValues': {},
 
   /**
    * Test whether the value of current_employer field is valid.
@@ -8,10 +8,6 @@ var publicautocomplete = {
    * false.
    */
   'isValid': function() {
-    // FIXME: if the form fails validation for some other reason, current_employer will
-    // have a value in it already, and it may be a good one, but this.matchedValues
-    // will be empty, causing this to fail.  Solution: if the current value
-    // isn't valid, run one more AJAX call to see if it's valid.
     value = cj('#current_employer').val()
     return (value.length == 0 || (this.matchedValues.hasOwnProperty(value) && this.matchedValues[value]));
   },
@@ -84,7 +80,7 @@ cj(function($) {
   });
 
   // If we're configured to ensure that the current_employer field contains an
-  // existing organization name, make it so.
+  // existing organization name, set that up now.
   if (CRM.vars['eu.tttp.publicautocomplete'].require_match === true) {
     var form = $('#current_employer').get(0).form
     $(form).submit(function (e) {
@@ -96,6 +92,24 @@ cj(function($) {
         $('#current_employer').focus().select().css({'border-color':'red', 'outline': 'none'});
       }
     });
+
+    // If there's already a value in the current_employer field, peform a search
+    // on that value and add any matching values to autocomplete.matchedValues
+    // so we can use it for validation in isValid().
+    var initialValue = $('#current_employer').val()
+    if (initialValue.length) {
+      CRM.api3('contact', 'getpublic', {'term': initialValue}).done(function(result) {
+        if (result.values.length > 0) {
+          // Loop through the values returned by the AJAX call.
+          $.each(result.values, function(k, v) {
+            var value = v[CRM.vars['eu.tttp.publicautocomplete'].return_properties[0]]
+            publicautocomplete.matchedValues[value] = true;
+          })
+        }
+      })
+    }
+
+
   }
 });
 
