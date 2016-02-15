@@ -10,6 +10,19 @@ function _publicautocomplete_supported_forms() {
 }
 
 /**
+ * Test whether a given value is a fully matching organization name.
+ */
+function _publicautocomplete_validate_current_employer($current_employer) {
+  $custom= CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'params');
+  $custom['return'] = 'organization_name';
+  $custom['organization_name'] = $current_employer;
+  $custom['sequential'] = 1;
+  $custom['version'] = 3;
+  $result = civicrm_api('Contact', 'Get', $custom);
+  return ($result['count'] > 0);
+}
+
+/**
  * Implementation of hook_civicrm_config
  */
 function publicautocomplete_civicrm_config(&$config) {
@@ -60,16 +73,11 @@ function publicautocomplete_civicrm_validateForm($formName, &$fields, &$files, &
   if (CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'require_match') !== TRUE) {
     return;
   }
-  $organization_name = CRM_Utils_Array::value('current_employer', $fields);
-  if (!$organization_name) {
-    return;
-  }
-  $api_params = array(
-    'term' => $organization_name,
-    'version' => 3,
-  );
-  $result =  civicrm_api('Contact','Getpublic',$api_params);
-  if ($result['count'] == 0) {
+  $current_employer = CRM_Utils_Array::value('current_employer', $fields);
+  if ($current_employer && ! _publicautocomplete_validate_current_employer($current_employer)) {
+    // Only perform this validation if there's a value in the current_employer
+    // field. If there is a value, and if it's not the exact name of an existing
+    // valid employer, report an error.
     $errors['current_employer'] = ts('%1 must be an existing organization name.', $form->_fields['current_employer']['title']);
   }
 }

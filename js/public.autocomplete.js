@@ -8,12 +8,16 @@ var publicautocomplete = {
    * false.
    */
   'isValid': function() {
+    // FIXME: if the form fails validation for some other reason, current_employer will
+    // have a value in it already, and it may be a good one, but this.matchedValues
+    // will be empty, causing this to fail.  Solution: if the current value
+    // isn't valid, run one more AJAX call to see if it's valid.
     value = cj('#current_employer').val()
     return (value.length == 0 || (this.matchedValues.hasOwnProperty(value) && this.matchedValues[value]));
   },
 
   /**
-   * Build the label for an option by concatenating the specified members of the
+   * Build the label for an option by concatenating the specified properties of the
    * given object.
    *
    * @param obj The object from which to take the values.
