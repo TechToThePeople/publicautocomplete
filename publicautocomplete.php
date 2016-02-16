@@ -33,7 +33,7 @@ function _publicautocomplete_get_setting($name) {
     $defaults = array(
       'params' => array(
         'contact_type' => 'organization',
-        'return' => 'sort_name,nick_name',
+        'return' => 'organization_name',
         'contact_is_deleted' => 0,
       ),
       'match_column' => 'sort_name',
@@ -42,7 +42,9 @@ function _publicautocomplete_get_setting($name) {
 
     foreach ($defaults as $key => $value) {
       $config_value = CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', $key);
-      $settings[$key] = $config_value;
+      if (!is_null($config_value)) {
+        $settings[$key] = $config_value;
+      }
     }
     $settings = array_replace_recursive($defaults, $settings);
   }
