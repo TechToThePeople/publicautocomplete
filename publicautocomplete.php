@@ -13,13 +13,45 @@ function _publicautocomplete_supported_forms() {
  * Test whether a given value is a fully matching organization name.
  */
 function _publicautocomplete_validate_current_employer($current_employer) {
-  $custom= CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'params');
+  $custom = _publicautocomplete_get_setting('params');
   $custom['return'] = 'organization_name';
   $custom['organization_name'] = $current_employer;
   $custom['sequential'] = 1;
   $custom['version'] = 3;
   $result = civicrm_api('Contact', 'Get', $custom);
   return ($result['count'] > 0);
+}
+
+/**
+ * Test whether a given value is a fully matching organization name.
+ */
+function _publicautocomplete_get_setting($name) {
+  // If this is the  first time, prime a $settings array with the default values,
+  // overridden with any values found by CRM_Core_BAO_Setting::getItem().
+  static $settings = array();
+  if (empty($settings)) {
+    $defaults = array(
+      'params' => array(
+        'contact_type' => 'organization',
+        'return' => 'sort_name,nick_name',
+        'contact_is_deleted' => 0,
+      ),
+      'match_column' => 'sort_name',
+      'require_match' => FALSE,
+    );
+
+    foreach ($defaults as $key => $value) {
+      $config_value = CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', $key);
+      $settings[$key] = $config_value;
+    }
+    $settings = array_replace_recursive($defaults, $settings);
+  }
+
+  // If the setting is still unset, set it from CRM_Core_BAO_Setting::getItem().
+  if (!array_key_exists($name, $settings)) {
+    $settings[$name] = CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', $name);
+  }
+  return $settings[$name];
 }
 
 /**
@@ -52,11 +84,11 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
   CRM_Core_Resources::singleton()->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete.js');
 
   // Define some parameters to pass to JavaScript.
-  $autocomplete_params = CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'params');
+  $autocomplete_params = _publicautocomplete_get_setting('params');
   $returnProperties = explode(',', str_replace(' ', '', $autocomplete_params['return']));
   $vars = array(
     'return_properties' => $returnProperties,
-    'require_match' => CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'require_match'),
+    'require_match' => _publicautocomplete_get_setting('require_match'),
     'required_error' => ts('%1 must be an existing organization name.', $form->_fields['current_employer']['title']),
   );
   CRM_Core_Resources::singleton()->addVars('eu.tttp.publicautocomplete', $vars);
@@ -70,7 +102,7 @@ function publicautocomplete_civicrm_validateForm($formName, &$fields, &$files, &
   if (!in_array ($formName,$forms)) {
     return;
   }
-  if (CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'require_match') !== TRUE) {
+  if (_publicautocomplete_get_setting('require_match') !== TRUE) {
     return;
   }
   $current_employer = CRM_Utils_Array::value('current_employer', $fields);

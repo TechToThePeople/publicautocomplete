@@ -5,7 +5,7 @@
 */
 
 function civicrm_api3_contact_getpublic ($params) {
-  $custom= CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'params');
+  $custom = _publicautocomplete_get_setting('params');
   if (!$custom) {
     $custom = array (
       'contact_type' => 'Organization',
@@ -14,7 +14,7 @@ function civicrm_api3_contact_getpublic ($params) {
   }
 
   // Determine column to search in, defaulting to sort_name.
-  $match_column = CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', 'match_column');
+  $match_column = _publicautocomplete_get_setting('match_column');
   if (!$match_column) {
     $match_column = 'sort_name';
   }
