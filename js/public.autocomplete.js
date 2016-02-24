@@ -61,7 +61,7 @@ cj(function($) {
       CRM.api3('contact', 'getpublic', {'term': request.term}).done(function(result) {
         // Initialize the list of autocomplete options.
         ret = [];
-        if (result.values.length > 0) {
+        if (result.count > 0) {
           // Loop through the values returned by the AJAX call.
           $.each(result.values, function(k, v) {            
             var label = publicautocomplete.buildLabel(v, CRM.vars['eu.tttp.publicautocomplete'].return_properties);
