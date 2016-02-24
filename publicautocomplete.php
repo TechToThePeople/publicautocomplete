@@ -63,15 +63,22 @@ function _publicautocomplete_get_setting($name) {
 /**
  * Add given key-value pairs to CRM object in Javasript.
  */
-function _publicautocomplete_addVarsToJavascript($vars) {
+function _publicautocomplete_setupJavascript($vars) {
   $resource = CRM_Core_Resources::singleton();
 
-  // CiviCRM 4.5 and above
-  if (method_exists($resource, 'addVars')) {
+  $version_check = new CRM_Utils_VersionCheck();
+  $civicrm_version = $version_check->localVersion;
+  if (version_compare($civicrm_version, '4.5', '>=')) {
+    // CiviCRM 4.5 and above
+    // Add the necessary javascript file.
+    CRM_Core_Resources::singleton()->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete-4.5.js');
+    // Pass vars to JavaScript
     $resource->addVars('eu.tttp.publicautocomplete', $vars);
   }
-  // CiviCRM 4.4
-  elseif (method_exists($resource, 'addSetting')) {
+  else {
+    // Add the necessary javascript file.
+    CRM_Core_Resources::singleton()->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete-4.4.js');
+    // Pass vars to JavaScript
     $resource->addSetting(array('vars' => array('eu.tttp.publicautocomplete' => $vars)));
   }
 }
@@ -102,8 +109,6 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
   if (!CRM_Core_Permission::check('access CiviCRM') && !CRM_Core_Permission::check('access AJAX API') ) {
     return;
   }
-  // Add the necessary javascript file.
-  CRM_Core_Resources::singleton()->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete.js');
 
   // Define some parameters to pass to JavaScript.
   $autocomplete_params = _publicautocomplete_get_setting('params');
@@ -113,7 +118,7 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
     'require_match' => _publicautocomplete_get_setting('require_match'),
     'required_error' => ts('%1 must be an existing organization name.', $form->_fields['current_employer']['title']),
   );
-  _publicautocomplete_addVarsToJavascript($vars);
+  _publicautocomplete_setupJavascript($vars);
 }
 
 /**
