@@ -16,8 +16,6 @@ function _publicautocomplete_validate_current_employer($current_employer) {
   $custom = _publicautocomplete_get_setting('params');
   $custom['return'] = 'organization_name';
   $custom['organization_name'] = $current_employer;
-  $custom['sequential'] = 1;
-  $custom['version'] = 3;
   $result = civicrm_api('Contact', 'Get', $custom);
   return ($result['count'] > 0);
 }
@@ -38,6 +36,7 @@ function _publicautocomplete_get_setting($name) {
       ),
       'match_column' => 'sort_name',
       'require_match' => FALSE,
+      'integer_matches' => array(),
     );
 
     foreach ($defaults as $key => $value) {
@@ -47,12 +46,17 @@ function _publicautocomplete_get_setting($name) {
       }
     }
     $settings = array_replace_recursive($defaults, $settings);
+
+    // If the setting is still unset, set it from CRM_Core_BAO_Setting::getItem().
+    if (!array_key_exists($name, $settings)) {
+      $settings[$name] = CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', $name);
+    }
+
+    // Finally, force some standard API parameters.
+    $settings['params']['sequential'] = 0;
+    $settings['params']['version'] = 3;
   }
 
-  // If the setting is still unset, set it from CRM_Core_BAO_Setting::getItem().
-  if (!array_key_exists($name, $settings)) {
-    $settings[$name] = CRM_Core_BAO_Setting::getItem('eu.tttp.publicautocomplete', $name);
-  }
   return $settings[$name];
 }
 
