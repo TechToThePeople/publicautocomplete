@@ -81,14 +81,24 @@ function _civicrm_api3_contact_getpublic_by_entity_integer($integer, $entity) {
 
   // If there are any records found, get the contact values for each returned
   // entity. Replace the api result values with the contact values.
+  $contact_values = array();
   if ($result['count']) {
-    $contact_values = array();
     foreach ($result['values'] as $id => $values) {
+      // There may be no contact for this entity. For example, a membership may
+      // have been found with the given ID, but the correspondig contact doesn't
+      // meet the our configured requirements. In that case, 'count' will be 0
+      // and we should skip this entity.
+      if (!$values['api.contact.get']['count']) {
+        continue;
+      }
       $contact_values[$id] = $values['api.contact.get']['values'][$values['contact_id']];
     }
-    $result['values'] = $contact_values;
+    // Any value in $result['id'] will be for the entity, not for its corresponding
+    // contact; just unset it.
     unset($result['id']);
   }
+  $result['values'] = $contact_values;
+  $result['count'] = count($contact_values);
 
   return $result;
 }
