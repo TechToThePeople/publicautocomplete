@@ -116,7 +116,7 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
   $vars = array(
     'return_properties' => $returnProperties,
     'require_match' => _publicautocomplete_get_setting('require_match'),
-    'required_error' => ts('%1 must be an existing organization name.', $form->_fields['current_employer']['title']),
+    'required_error' => ts('%1 must be an existing organization name.', array(1 => $form->_fields['current_employer']['title'])),
   );
   _publicautocomplete_setupJavascript($vars);
 }
@@ -137,7 +137,7 @@ function publicautocomplete_civicrm_validateForm($formName, &$fields, &$files, &
     // Only perform this validation if there's a value in the current_employer
     // field. If there is a value, and if it's not the exact name of an existing
     // valid employer, report an error.
-    $errors['current_employer'] = ts('%1 must be an existing organization name.', $form->_fields['current_employer']['title']);
+    $errors['current_employer'] = ts('%1 must be an existing organization name.', array(1 => $form->_fields['current_employer']['title']));
   }
 }
 
