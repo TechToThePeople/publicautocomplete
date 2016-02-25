@@ -6,7 +6,13 @@ require_once 'publicautocomplete.civix.php';
  * Get an array of CiviCRM forms supported by this extension.
  */
 function _publicautocomplete_supported_forms() {
-  return array('CRM_Profile_Form_Edit','CRM_Event_Form_Registration_Register');
+  // FIXME: are there any forms where we /do not/ want this? Maybe change this
+  // to match for all forms.
+  return array(
+    'CRM_Profile_Form_Edit',
+    'CRM_Event_Form_Registration_Register',
+    'CRM_Contribute_Form_Contribution_Main'
+  );
 }
 
 /**
