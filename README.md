@@ -3,7 +3,13 @@ publicautocomplete
 
 This civicrm extension allows an anonymous user to have an autocomplete field instead of a free form one for the current employer, to avoid mispelled/duplicate organisation names
 
-tested on profile edit (/civicrm/profile/create) and event registration (/civicrm/event/register), patch welcome for the rest
+Tested on the following forms:
+  * profile edit (/civicrm/profile/create)
+  * event registration (/civicrm/event/register)
+  * contributions pages (/civicrm/contribute/transact)
+  * View/edit Drupal account (e.g., /user/%uid/edit/name_and_address)
+
+Patch welcome for other forms.
 
 Install
 ======
