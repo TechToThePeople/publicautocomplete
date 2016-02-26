@@ -8,8 +8,8 @@ var publicautocomplete = {
    * false.
    */
   'isValid': function() {
-    value = cj('#current_employer').val()
-    return (value.length == 0 || (this.matchedValues.hasOwnProperty(value) && this.matchedValues[value]));
+    value = cj('#current_employer').val();
+    return (value.length === 0 || (this.matchedValues.hasOwnProperty(value) && this.matchedValues[value]));
   },
 
   /**
@@ -28,11 +28,11 @@ var publicautocomplete = {
       var separator = ' :: ';
       // Array to hold properties that will be concatenated.
       var text_values = [];
-      for (i in properties) {
+      for (var i in properties) {
         var component = obj[properties[i]];
         // Only include the property if it's not an empty value.
         if (! this.isEmpty(component)) {
-          text_values.push(component)
+          text_values.push(component);
         }
       }
       return text_values.join(separator);
@@ -47,7 +47,7 @@ var publicautocomplete = {
    * Test if the given string is empty or null.
    */
   'isEmpty': function(str) {
-    if (typeof str === 'undefined' || str == null) {
+    if (typeof str === 'undefined' || str === null) {
       return true;
     }
     return str.replace(/\s/g, '').length < 1;
@@ -65,24 +65,24 @@ cj(function($) {
           // Loop through the values returned by the AJAX call.
           $.each(result.values, function(k, v) {            
             var label = publicautocomplete.buildLabel(v, CRM.vars['eu.tttp.publicautocomplete'].return_properties);
-            var value = v[CRM.vars['eu.tttp.publicautocomplete'].return_properties[0]]
+            var value = v[CRM.vars['eu.tttp.publicautocomplete'].return_properties[0]];
             // Store the value in the matchedValues array so we can use it for
             // validation in isValid().
             publicautocomplete.matchedValues[value] = true;
             // Add the value/label pair to the list of autocomplete options.
             ret.push({'value': value, 'label': label});
-          })
+          });
         }
         // Return the list of autocomplete options.
         response(ret);
-      })
+      });
     }
   });
 
   // If we're configured to ensure that the current_employer field contains an
   // existing organization name, set that up now.
   if (CRM.vars['eu.tttp.publicautocomplete'].require_match === true) {
-    var form = $('#current_employer').get(0).form
+    var form = $('#current_employer').get(0).form;
     $(form).submit(function (e) {
       // If the current_employer value is invalid, cancel form submission and
       // alert the user.
@@ -96,20 +96,18 @@ cj(function($) {
     // If there's already a value in the current_employer field, peform a search
     // on that value and add any matching values to autocomplete.matchedValues
     // so we can use it for validation in isValid().
-    var initialValue = $('#current_employer').val()
+    var initialValue = $('#current_employer').val();
     if (initialValue.length) {
       CRM.api3('contact', 'getpublic', {'term': initialValue}).done(function(result) {
         if (result.values.length > 0) {
           // Loop through the values returned by the AJAX call.
           $.each(result.values, function(k, v) {
-            var value = v[CRM.vars['eu.tttp.publicautocomplete'].return_properties[0]]
+            var value = v[CRM.vars['eu.tttp.publicautocomplete'].return_properties[0]];
             publicautocomplete.matchedValues[value] = true;
-          })
+          });
         }
-      })
+      });
     }
-
-
   }
 });
 

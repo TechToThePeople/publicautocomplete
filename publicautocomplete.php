@@ -11,7 +11,7 @@ function _publicautocomplete_supported_forms() {
   return array(
     'CRM_Profile_Form_Edit',
     'CRM_Event_Form_Registration_Register',
-    'CRM_Contribute_Form_Contribution_Main'
+    'CRM_Contribute_Form_Contribution_Main',
   );
 }
 
@@ -90,12 +90,12 @@ function _publicautocomplete_setupJavascript($vars) {
 }
 
 /**
- * Implementation of hook_civicrm_config
+ * Implements hook_civicrm_config().
  */
 function publicautocomplete_civicrm_config(&$config) {
-  $extRoot = dirname( __FILE__ ) . DIRECTORY_SEPARATOR;
-  $include_path = $extRoot . PATH_SEPARATOR . get_include_path( );
-  set_include_path( $include_path );
+  $extRoot = dirname(__FILE__) . DIRECTORY_SEPARATOR;
+  $include_path = $extRoot . PATH_SEPARATOR . get_include_path();
+  set_include_path($include_path);
 }
 
 function publicautocomplete_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions) {
@@ -108,11 +108,11 @@ function publicautocomplete_civicrm_alterAPIPermissions($entity, $action, &$para
 function publicautocomplete_civicrm_buildForm($formName, &$form) {
   // Return void if this isn't one of the supported CiviCRM forms.
   $forms = _publicautocomplete_supported_forms();
-  if (!in_array ($formName,$forms)) {
+  if (!in_array($formName, $forms)) {
     return;
   }
   // Return void if we don't have permission.
-  if (!CRM_Core_Permission::check('access CiviCRM') && !CRM_Core_Permission::check('access AJAX API') ) {
+  if (!CRM_Core_Permission::check('access CiviCRM') && !CRM_Core_Permission::check('access AJAX API')) {
     return;
   }
 
@@ -132,14 +132,14 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
  */
 function publicautocomplete_civicrm_validateForm($formName, &$fields, &$files, &$form, &$errors) {
   $forms = _publicautocomplete_supported_forms();
-  if (!in_array ($formName,$forms)) {
+  if (!in_array($formName, $forms)) {
     return;
   }
   if (_publicautocomplete_get_setting('require_match') !== TRUE) {
     return;
   }
   $current_employer = CRM_Utils_Array::value('current_employer', $fields);
-  if ($current_employer && ! _publicautocomplete_validate_current_employer($current_employer)) {
+  if ($current_employer && !_publicautocomplete_validate_current_employer($current_employer)) {
     // Only perform this validation if there's a value in the current_employer
     // field. If there is a value, and if it's not the exact name of an existing
     // valid employer, report an error.
@@ -148,27 +148,21 @@ function publicautocomplete_civicrm_validateForm($formName, &$fields, &$files, &
 }
 
 /**
- * Implementation of hook_civicrm_install
+ * Implements hook_civicrm_install().
  */
 function publicautocomplete_civicrm_install() {
   return _publicautocomplete_civix_civicrm_install();
 }
 
 /**
- * Implementation of hook_civicrm_uninstall
+ * Implements hook_civicrm_uninstall().
  */
 function publicautocomplete_civicrm_uninstall() {
   return _publicautocomplete_civix_civicrm_uninstall();
 }
 
 /**
- * Implementation of hook_civicrm_upgrade
- *
- * @param $op string, the type of operation being performed; 'check' or 'enqueue'
- * @param $queue CRM_Queue_Queue, (for 'enqueue') the modifiable list of pending up upgrade tasks
- *
- * @return mixed  based on op. for 'check', returns array(boolean) (TRUE if upgrades are pending)
- *                for 'enqueue', returns void
+ * Implements hook_civicrm_upgrade().
  */
 function publicautocomplete_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
   return _publicautocomplete_civix_civicrm_upgrade($op, $queue);

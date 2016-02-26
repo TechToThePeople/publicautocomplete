@@ -1,10 +1,10 @@
 <?php
-/* this api action offers a reduced functionality, to be sure it can be let open to anonyous visitors
-*
-* you can customise it, but be aware of the potential security risks of exposing more than you want to
-*/
-
-function civicrm_api3_contact_getpublic ($params) {
+/**
+ * This api action offers a reduced functionality, to be sure it can be let
+ * open to anonyous visitors. You can customise it, but be aware of the
+ * potential security risks of exposing more than you want to.
+ */
+function civicrm_api3_contact_getpublic($params) {
   $term = $params['term'];
   $custom = _publicautocomplete_get_setting('params');
 
@@ -22,11 +22,11 @@ function civicrm_api3_contact_getpublic ($params) {
   }
   else {
     $custom[$match_column] = array(
-        'LIKE' => '%'. $term .'%',
+      'LIKE' => '%' . $term . '%',
     );
   }
-  
-  $ret = civicrm_api('Contact','Get',$custom);
+
+  $ret = civicrm_api('Contact', 'Get', $custom);
 
   if ($ret['is_error']) {
     // If there's any error, return now.
@@ -72,8 +72,7 @@ function _civicrm_api3_contact_getpublic_by_entity_integer($integer, $entity) {
   // about the entity itself, just the contact.
   unset($custom['return']);
 
-
-  $result = civicrm_api($entity,'Get',$custom);
+  $result = civicrm_api($entity, 'Get', $custom);
   // If the API result is an error, just return the result now.
   if ($result['is_error']) {
     return $result;
