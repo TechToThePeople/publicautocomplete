@@ -39,8 +39,11 @@ $civicrm_setting['eu.tttp.publicautocomplete']['params'] = array(
 The return param is important, always specify only the fields you want to display, as they will be displayed in the autocomplete options. Eg. avoid email probably.
 
 You can filter by group, tag, contact type, tag, custom field... pretty much everything you want. Look at examples from the contact api, that's the same params. 
- 
-It relies on the api contact get, and by default searches on organization_name.
+
+Other config options
+--------------------
+### match_column
+The matching relies on the api contact get, and by default searches on organization_name.
 If you want to search on a different field, use the `match_column` config option:
 ```php
 global $civicrm_setting;
@@ -48,12 +51,14 @@ $civicrm_setting['eu.tttp.publicautocomplete']['match_column'] = 'sort_name';
 // Note that 'sort_name' will search email, organization_name, and display_name.
 ```
 
+### require_match
 If you want to force the user to submit only a value from the list (or leave to leave it blank), thereby preventing the user from creating new organization records, set the `require_match` config option to TRUE (it defaults to FALSE):
 ```php
 global $civicrm_setting;
 $civicrm_setting['eu.tttp.publicautocomplete']['require_match'] = TRUE;
 ```
 
+### integer_matches
 If you want to allow users to find an organization by entity ID, you can. For example, entering "38" could match the organization with Contact ID 38, or one with Membership ID 38. To enable this type of matching, use the `integer_matches` config option. This is probably only useful if you're making your users aware of their Contact ID or Member ID.
 ```php
 global $civicrm_setting;
