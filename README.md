@@ -16,31 +16,54 @@ Configuration
 =============
 
 By default, it returns all the organisations. 
-Think long and hard about what you really want to expose, if you value privacy, that's probably not what you want.
+Think long and hard about what you really want to expose; if you value privacy, "all organizations" is probably not what you want.
 
-Is it normal for instance to provide the name of organisations that are your IT providers, banks, cleaning company, center for drug abuse, restaurants... 
-Search all your organisations, and be sure you and they are ok being on a list associated with your org, I'll wait.
+Is it normal, for instance, to provide the name of organisations that are your IT providers, banks, cleaning company, center for drug abuse, restaurants...
+Search all your organisations, and be sure you and they are okay being on a list associated with your organization. I'll wait.
 
 Including all the errors of people that registered online? Including the spams, fake or obscene organisation names? You know, when "Dick" from the company "two girls and a cup" registered to your events and newsletter?
 
 So you do want to customise the list and restrict to a subset only? Good, that's what I thought.
 
 You need to add in your civicrm.settings.php a new config variable
+```php
 global $civicrm_setting;
-$civicrm_setting['eu.tttp.publicautocomplete']['params'] = array('contact_type'=> 'Organization',
-'contact_sub_type' => 'members',
-'group' => 42, // active groups
-'return'=>'sort_name,nick_name,country');
+$civicrm_setting['eu.tttp.publicautocomplete']['params'] = array(
+  'contact_type' => 'Organization',
+  'contact_sub_type' => 'members',
+  'group' => 42, // active groups
+  'return' => 'display_name, city'
+);
+```
 
-the return param is important, always specify only the fields you want to display. Eg. avoid email probably.
+The return param is important, always specify only the fields you want to display, as they will be displayed in the autocomplete options. Eg. avoid email probably.
 
-You can filter by group, tag, contact type, tag, custom field... pretty much everything you want. Look at eexamples from the contact api, that's the same params. 
+You can filter by group, tag, contact type, tag, custom field... pretty much everything you want. Look at examples from the contact api, that's the same params. 
  
+It relies on the api contact get, and by default searches on organization_name.
+If you want to search on a different field, use the `match_column` config option:
+```php
+global $civicrm_setting;
+$civicrm_setting['eu.tttp.publicautocomplete']['match_column'] = 'sort_name';
+// Note that 'sort_name' will search email, organization_name, and display_name.
+```
 
-It relies on the api contact get, and only search on organization_name. If you need something else or want to debug, you can modify the api/v3/Contact/Publicget.php and do whatever you want.
-
-You can also force the user to submit only a value from the list (or leave to leave it blank), thereby preventing the user from creating new organization records. To enable this setting, add this to civicrm.settings.php:
+If you want to force the user to submit only a value from the list (or leave to leave it blank), thereby preventing the user from creating new organization records, set the `require_match` config option to TRUE (it defaults to FALSE):
+```php
+global $civicrm_setting;
 $civicrm_setting['eu.tttp.publicautocomplete']['require_match'] = TRUE;
+```
+
+If you want to allow users to find an organization by entity ID, you can. For example, entering "38" could match the organization with Contact ID 38, or one with Membership ID 38. To enable this type of matching, use the `integer_matches` config option. This is probably only useful if you're making your users aware of their Contact ID or Member ID.
+```php
+global $civicrm_setting;
+$civicrm_setting['eu.tttp.publicautocomplete']['integer_matches'] = array(
+  'member', // Integers in the autocomplete field will match on an exact Membership ID.
+  'contact', // Integers in the autocomplete field will match on an exact Contact ID.
+);
+```
+
+If you need something else or want to debug, you can modify the api/v3/Contact/Publicget.php and do whatever you want.
 
 
 Test & Access right
