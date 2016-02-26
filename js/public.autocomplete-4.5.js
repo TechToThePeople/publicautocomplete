@@ -99,7 +99,7 @@ cj(function($) {
     var initialValue = $('#current_employer').val();
     if (initialValue.length) {
       CRM.api3('contact', 'getpublic', {'term': initialValue}).done(function(result) {
-        if (result.values.length > 0) {
+        if (result.count > 0) {
           // Loop through the values returned by the AJAX call.
           $.each(result.values, function(k, v) {
             var value = v[CRM.vars['eu.tttp.publicautocomplete'].return_properties[0]];
