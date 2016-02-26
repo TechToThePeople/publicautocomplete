@@ -12,6 +12,7 @@ function _publicautocomplete_supported_forms() {
     'CRM_Profile_Form_Edit',
     'CRM_Event_Form_Registration_Register',
     'CRM_Contribute_Form_Contribution_Main',
+    'CRM_Profile_Form_Dynamic',
   );
 }
 
@@ -70,20 +71,23 @@ function _publicautocomplete_get_setting($name) {
  * Add given key-value pairs to CRM object in Javasript.
  */
 function _publicautocomplete_setupJavascript($vars) {
+
+  civicrm_initialize();
   $resource = CRM_Core_Resources::singleton();
+  $resource->addCoreResources();
 
   $version_check = new CRM_Utils_VersionCheck();
   $civicrm_version = $version_check->localVersion;
   if (version_compare($civicrm_version, '4.5', '>=')) {
     // CiviCRM 4.5 and above
     // Add the necessary javascript file.
-    CRM_Core_Resources::singleton()->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete-4.5.js');
+    $resource->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete-4.5.js', 100, 'html-header');
     // Pass vars to JavaScript
     $resource->addVars('eu.tttp.publicautocomplete', $vars);
   }
   else {
     // Add the necessary javascript file.
-    CRM_Core_Resources::singleton()->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete-4.4.js');
+    $resource->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete-4.4.js', 100, 'html-header');
     // Pass vars to JavaScript
     $resource->addSetting(array('vars' => array('eu.tttp.publicautocomplete' => $vars)));
   }
