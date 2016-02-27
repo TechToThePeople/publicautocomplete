@@ -7,22 +7,25 @@
  */
 function _publicautocomplete_civix_civicrm_config(&$config = NULL) {
   static $configured = FALSE;
-  if ($configured) return;
+  if ($configured) {
+    return;
+  }
   $configured = TRUE;
 
   $template =& CRM_Core_Smarty::singleton();
 
-  $extRoot = dirname( __FILE__ ) . DIRECTORY_SEPARATOR;
+  $extRoot = dirname(__FILE__) . DIRECTORY_SEPARATOR;
   $extDir = $extRoot . 'templates';
 
-  if ( is_array( $template->template_dir ) ) {
-      array_unshift( $template->template_dir, $extDir );
-  } else {
-      $template->template_dir = array( $extDir, $template->template_dir );
+  if (is_array($template->template_dir)) {
+    array_unshift($template->template_dir, $extDir);
+  }
+  else {
+    $template->template_dir = array($extDir, $template->template_dir);
   }
 
-  $include_path = $extRoot . PATH_SEPARATOR . get_include_path( );
-  set_include_path( $include_path );
+  $include_path = $extRoot . PATH_SEPARATOR . get_include_path();
+  set_include_path($include_path);
 }
 
 /**
@@ -37,7 +40,7 @@ function _publicautocomplete_civix_civicrm_xmlMenu(&$files) {
 }
 
 /**
- * Implementation of hook_civicrm_install
+ * Implements hook_civicrm_install().
  */
 function _publicautocomplete_civix_civicrm_install() {
   _publicautocomplete_civix_civicrm_config();
@@ -47,7 +50,7 @@ function _publicautocomplete_civix_civicrm_install() {
 }
 
 /**
- * Implementation of hook_civicrm_uninstall
+ * Implements hook_civicrm_uninstall().
  */
 function _publicautocomplete_civix_civicrm_uninstall() {
   _publicautocomplete_civix_civicrm_config();
@@ -72,9 +75,10 @@ function _publicautocomplete_civix_civicrm_upgrade($op, CRM_Queue_Queue $queue =
 }
 
 function _publicautocomplete_civix_upgrader() {
-  if (!file_exists(__DIR__.'/CRM/Publicautocomplete/Upgrader.php')) {
+  if (!file_exists(__DIR__ . '/CRM/Publicautocomplete/Upgrader.php')) {
     return NULL;
-  } else {
+  }
+  else {
     return CRM_Publicautocomplete_Upgrader_Base::instance();
   }
 }
