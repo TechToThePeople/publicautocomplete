@@ -119,6 +119,10 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
   if (!CRM_Core_Permission::check('access CiviCRM') && !CRM_Core_Permission::check('access AJAX API')) {
     return;
   }
+  // Return void if there's no current_employer field.
+  if (!array_key_exists('current_employer', $form->_fields)) {
+    return;
+  }
 
   // Define some parameters to pass to JavaScript.
   $autocomplete_params = _publicautocomplete_get_setting('params');
