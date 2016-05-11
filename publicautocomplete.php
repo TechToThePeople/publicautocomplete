@@ -19,16 +19,24 @@ function _publicautocomplete_supported_forms() {
 /**
  * Test whether a given value is a fully matching organization name.
  */
-function _publicautocomplete_validate_current_employer($current_employer) {
-  $custom = _publicautocomplete_get_setting('params');
-  $custom['return'] = 'organization_name';
-  $custom['organization_name'] = $current_employer;
-  $result = civicrm_api('Contact', 'Get', $custom);
-  return ($result['count'] > 0);
+function _publicautocomplete_validate_current_employer($organization_name) {
+  $params = _publicautocomplete_get_setting('params');
+  $return_properties = explode(',', str_replace(' ', '', $params['return']));
+  $name_column = $return_properties[0];
+
+  $custom = array();
+  $custom['term'] = $organization_name;
+  $custom['version'] = 3;
+  $result = civicrm_api('Contact', 'getpublic', $custom);
+
+  $full_matches = array_filter($result['values'], function($item) use ($organization_name, $name_column) {
+    return ($item[$name_column] == $organization_name);
+  });
+  return (!empty($full_matches));
 }
 
 /**
- * Test whether a given value is a fully matching organization name.
+ * Get the value of the given config setting.
  */
 function _publicautocomplete_get_setting($name) {
   // If this is the  first time, prime a $settings array with the default values,
@@ -37,13 +45,13 @@ function _publicautocomplete_get_setting($name) {
   if (empty($settings)) {
     $defaults = array(
       'params' => array(
-        'contact_type' => 'organization',
         'return' => 'organization_name',
         'contact_is_deleted' => 0,
       ),
       'match_column' => 'sort_name',
       'require_match' => FALSE,
       'integer_matches' => array(),
+      'accept_existing_value' => TRUE,
     );
 
     foreach ($defaults as $key => $value) {
@@ -62,6 +70,7 @@ function _publicautocomplete_get_setting($name) {
     // Finally, force some standard API parameters.
     $settings['params']['sequential'] = 0;
     $settings['params']['version'] = 3;
+    $settings['params']['contact_type'] = 'organization';
   }
 
   return $settings[$name];
@@ -126,9 +135,9 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
 
   // Define some parameters to pass to JavaScript.
   $autocomplete_params = _publicautocomplete_get_setting('params');
-  $returnProperties = explode(',', str_replace(' ', '', $autocomplete_params['return']));
+  $return_properties = explode(',', str_replace(' ', '', $autocomplete_params['return']));
   $vars = array(
-    'return_properties' => $returnProperties,
+    'return_properties' => $return_properties,
     'require_match' => _publicautocomplete_get_setting('require_match'),
     'required_error' => ts('%1 must be an existing organization name.', array(1 => $form->_fields['current_employer']['title'])),
   );

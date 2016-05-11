@@ -8,7 +8,7 @@ var publicautocomplete = {
    * false.
    */
   'isValid': function() {
-    value = cj('#current_employer').val();
+    var value = cj('#current_employer').val();
     return (value.length === 0 || (this.matchedValues.hasOwnProperty(value) && this.matchedValues[value]));
   },
 
