@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <extension key="eu.tttp.publicautocomplete" type="module">
-  <downloadUrl>http://FIXME/eu.tttp.publicautocomplete.zip</downloadUrl>
   <file>publicautocomplete</file>
   <name>public autocomplete field</name>
   <description>This extension allows an anonymous user to have an autocomplete field instead of a free form one, to avoid mispelled/duplicate organisation names on the current employer</description>
