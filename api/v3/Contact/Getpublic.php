@@ -50,6 +50,46 @@ function civicrm_api3_contact_getpublic($params) {
       }
     }
   }
+
+  // Finally, add the current user's current employer, if we're searching on a
+  // string. Even if it doesn't match the configured limiting parameters, we
+  // should still allow the user to save the form with their existing current
+  // employer. Otherwise, we'd be blocking the user from submitting the form
+  // with current correct data.
+  if (_publicautocomplete_get_setting('accept_existing_value')) {
+    $current_user_existing_employer_custom = array(
+      'id' => CRM_Core_Session::getLoggedInContactID(),
+      'version' => 3,
+      'sequential' => 1,
+      'return.current_employer' => 1,
+    );
+    $current_user_existing_employer_ret = civicrm_api('Contact', 'Get', $current_user_existing_employer_custom);
+    if ($current_user_existing_employer_ret['is_error']) {
+      // If there's any error, just return this search result now.
+      return $current_user_existing_employer_ret;
+    }
+    else if (
+      (!empty($current_user_existing_employer_ret['values'][0]['current_employer'])) &&
+      (stristr($current_user_existing_employer_ret['values'][0]['current_employer'], $term) !== FALSE)
+    ) {
+      $existing_employer_custom = array(
+        'return' => $custom['return'],
+        'version' => $custom['version'],
+        'sequential' => $custom['sequential'],
+        'contact_type' => $custom['contact_type'],
+        'organization_name' => $current_user_existing_employer_ret['values'][0]['current_employer'],
+      );
+      $existing_employer_ret = civicrm_api('Contact', 'Get', $existing_employer_custom);
+      if ($existing_employer_ret['is_error']) {
+        // If there's any error, just return this search result now.
+        return $existing_employer_ret;
+      }
+      else {
+        $ret['count'] += $existing_employer_ret['count'];
+        $ret['values'] += $existing_employer_ret['values'];
+      }
+    }
+  }
   return $ret;
 }
 
