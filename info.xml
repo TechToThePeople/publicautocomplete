@@ -3,6 +3,9 @@
   <file>publicautocomplete</file>
   <name>public autocomplete field</name>
   <description>This extension allows an anonymous user to have an autocomplete field instead of a free form one, to avoid mispelled/duplicate organisation names on the current employer</description>
+  <urls>
+    <url desc="Documentation">https://github.com/TechToThePeople/publicautocomplete</url>
+  </urls>
   <license>agpl 3</license>
   <maintainer>
     <author>Xavier Dutoit</author>
