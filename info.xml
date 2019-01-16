@@ -17,6 +17,7 @@
     <ver>4.4</ver>
     <ver>4.5</ver>
     <ver>4.6</ver>
+    <ver>4.7</ver>
   </compatibility>
   <comments>This needs some configuration change on your civicrm.settings.php. Read the README.md</comments>
   <civix>
