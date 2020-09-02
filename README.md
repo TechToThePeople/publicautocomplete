@@ -11,12 +11,13 @@ Tested on the following forms:
 
 Patch welcome for other forms.
 
+For the latest version, see: https://github.com/TechToThePeople/publicautocomplete.git
+
 Install
 ======
 
-git clone https://github.com/TechToThePeople/publicautocomplete.git in your local extension repository and it should work
-
-you need to patch js/rest.js from CRM-10524 if you are not running from trunk
+Install as a regular CiviCRM extension. For more information, see:  
+https://docs.civicrm.org/sysadmin/en/latest/customize/extensions/
 
 Configuration
 =============
