@@ -80,7 +80,6 @@ function _publicautocomplete_get_setting($name) {
  * Add given key-value pairs to CRM object in Javasript.
  */
 function _publicautocomplete_setupJavascript($vars) {
-  civicrm_initialize();
   $resource = CRM_Core_Resources::singleton();
   $resource->addCoreResources();
 
