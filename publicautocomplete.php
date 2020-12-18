@@ -2,6 +2,8 @@
 
 require_once 'publicautocomplete.civix.php';
 
+use CRM_Publicautocomplete_ExtensionUtil as E;
+
 /**
  * Get an array of CiviCRM forms supported by this extension.
  */
