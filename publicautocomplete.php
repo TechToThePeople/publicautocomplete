@@ -86,7 +86,7 @@ function _publicautocomplete_setupJavascript($vars) {
   $resource->addCoreResources();
 
   // Add the necessary javascript file and configuration vars.
-  $resource->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete-4.5.js', 100, 'html-header');
+  $resource->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete-4.5.js', 'html-header');
   $resource->addVars('eu.tttp.publicautocomplete', $vars);
 }
 
