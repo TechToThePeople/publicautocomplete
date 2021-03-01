@@ -85,6 +85,11 @@ function _publicautocomplete_setupJavascript($vars) {
   $resource = CRM_Core_Resources::singleton();
   $resource->addCoreResources();
 
+  // Fix bug on AJAX call to include js file
+  CRM_Core_Region::instance('page-footer')->add([
+    'scriptUrl' => $resource->getUrl('eu.tttp.publicautocomplete', 'js/public.autocomplete-4.5.js'),
+  ]);
+
   // Add the necessary javascript file and configuration vars.
   $resource->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete-4.5.js', 100, 'html-header');
   $resource->addVars('eu.tttp.publicautocomplete', $vars);
@@ -129,6 +134,7 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
     'require_match' => _publicautocomplete_get_setting('require_match'),
     'required_error' => E::ts('%1 must be an existing organization name.', array(1 => $form->_fields['current_employer']['title'])),
   );
+
   _publicautocomplete_setupJavascript($vars);
 }
 
