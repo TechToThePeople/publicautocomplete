@@ -79,6 +79,11 @@ cj(function($) {
     }
   });
 
+  // prevent autofill of the browser
+  // the tag contains the attribute autocomplete="off" but this is ignored by modern browsers
+  // autocomplete="new-password" works better
+  $('#current_employer').attr('autocomplete', 'new-password');
+
   // If we're configured to ensure that the current_employer field contains an
   // existing organization name, set that up now.
   if (CRM.vars['eu.tttp.publicautocomplete'].require_match === true) {
