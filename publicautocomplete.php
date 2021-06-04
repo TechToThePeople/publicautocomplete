@@ -15,6 +15,7 @@ function _publicautocomplete_supported_forms() {
     'CRM_Event_Form_Registration_Register',
     'CRM_Contribute_Form_Contribution_Main',
     'CRM_Profile_Form_Dynamic',
+    'CRM_Event_Form_Registration_AdditionalParticipant',
   );
 }
 
