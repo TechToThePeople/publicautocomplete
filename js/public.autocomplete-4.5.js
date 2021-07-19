@@ -90,6 +90,7 @@ cj(function($) {
         e.preventDefault();
         alert(CRM.vars['eu.tttp.publicautocomplete'].required_error);
         $('#current_employer').focus().select().css({'border-color':'red', 'outline': 'none'});
+        $(form).trigger('invalid-form');
       }
     });
 
