@@ -2,6 +2,8 @@
 
 require_once 'publicautocomplete.civix.php';
 
+use CRM_Publicautocomplete_ExtensionUtil as E;
+
 /**
  * Get an array of CiviCRM forms supported by this extension.
  */
@@ -13,6 +15,7 @@ function _publicautocomplete_supported_forms() {
     'CRM_Event_Form_Registration_Register',
     'CRM_Contribute_Form_Contribution_Main',
     'CRM_Profile_Form_Dynamic',
+    'CRM_Event_Form_Registration_AdditionalParticipant',
   );
 }
 
@@ -80,9 +83,13 @@ function _publicautocomplete_get_setting($name) {
  * Add given key-value pairs to CRM object in Javasript.
  */
 function _publicautocomplete_setupJavascript($vars) {
-  civicrm_initialize();
   $resource = CRM_Core_Resources::singleton();
   $resource->addCoreResources();
+
+  // Fix bug on AJAX call to include js file
+  CRM_Core_Region::instance('page-footer')->add([
+    'scriptUrl' => $resource->getUrl('eu.tttp.publicautocomplete', 'js/public.autocomplete-4.5.js'),
+  ]);
 
   // Add the necessary javascript file and configuration vars.
   $resource->addScriptFile('eu.tttp.publicautocomplete', 'js/public.autocomplete-4.5.js', 100, 'html-header');
@@ -126,8 +133,9 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
   $vars = array(
     'return_properties' => $return_properties,
     'require_match' => _publicautocomplete_get_setting('require_match'),
-    'required_error' => ts('%1 must be an existing organization name.', array(1 => $form->_fields['current_employer']['title'])),
+    'required_error' => E::ts('%1 must be an existing organization name.', array(1 => $form->_fields['current_employer']['title'])),
   );
+
   _publicautocomplete_setupJavascript($vars);
 }
 
@@ -147,7 +155,7 @@ function publicautocomplete_civicrm_validateForm($formName, &$fields, &$files, &
     // Only perform this validation if there's a value in the current_employer
     // field. If there is a value, and if it's not the exact name of an existing
     // valid employer, report an error.
-    $errors['current_employer'] = ts('%1 must be an existing organization name.', array(1 => $form->_fields['current_employer']['title']));
+    $errors['current_employer'] = E::ts('%1 must be an existing organization name.', array(1 => $form->_fields['current_employer']['title']));
   }
 }
 
