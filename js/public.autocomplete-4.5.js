@@ -63,7 +63,7 @@ cj(function($) {
         ret = [];
         if (result.count > 0) {
           // Loop through the values returned by the AJAX call.
-          $.each(result.values, function(k, v) {            
+          $.each(result.values, function(k, v) {
             var label = publicautocomplete.buildLabel(v, CRM.vars['eu.tttp.publicautocomplete'].return_properties);
             var value = v[CRM.vars['eu.tttp.publicautocomplete'].return_properties[0]];
             // Store the value in the matchedValues array so we can use it for
@@ -94,7 +94,7 @@ cj(function($) {
       if(! publicautocomplete.isValid()) {
         e.preventDefault();
         alert(CRM.vars['eu.tttp.publicautocomplete'].required_error);
-        $('#current_employer').focus().select().css({'border-color':'red', 'outline': 'none'});
+        $('#current_employer').focus().select().addClass('invalid').css({'border-color':'red', 'outline': 'none'});
         $(form).trigger('invalid-form');
       }
     });
@@ -114,6 +114,14 @@ cj(function($) {
         }
       });
     }
+
+    // Remove invalid class and styling on #current_employer input when changed
+    $('#current_employer').on('input', function(){
+      if ($(this).hasClass('invalid')) {
+        $(this).removeClass('invalid').removeAttr('style');
+      }
+    });
   }
+
 });
 
