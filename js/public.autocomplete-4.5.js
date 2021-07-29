@@ -51,6 +51,12 @@ var publicautocomplete = {
       return true;
     }
     return str.replace(/\s/g, '').length < 1;
+  },
+
+  'clearInvalidStyling': function(e) {
+    console.log('clearInvalidStyling');
+    cj('#current_employer').removeClass('publicautocomplete-invalid');
+    return true;
   }
 };
 
@@ -94,7 +100,7 @@ cj(function($) {
       if(! publicautocomplete.isValid()) {
         e.preventDefault();
         alert(CRM.vars['eu.tttp.publicautocomplete'].required_error);
-        $('#current_employer').focus().select().css({'border-color':'red', 'outline': 'none'});
+        $('#current_employer').focus().select().addClass('publicautocomplete-invalid');
         $(form).trigger('invalid-form');
       }
     });
@@ -115,5 +121,8 @@ cj(function($) {
       });
     }
   }
+
+  // Clear any "invalid" styling upon change of value.
+  $('#current_employer').change(publicautocomplete.clearInvalidStyling);
 });
 
