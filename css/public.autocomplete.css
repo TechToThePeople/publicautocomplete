@@ -1,0 +1,5 @@
+/* Use fairly specific identifier to increase priority over civicrm native border styling. */
+input#current_employer.publicautocomplete-invalid {
+  border-color: red;
+  outline: none;
+}
