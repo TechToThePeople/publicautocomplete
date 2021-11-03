@@ -8,15 +8,28 @@ use CRM_Publicautocomplete_ExtensionUtil as E;
  * Get an array of CiviCRM forms supported by this extension.
  */
 function _publicautocomplete_supported_forms() {
-  // FIXME: are there any forms where we /do not/ want this? Maybe change this
-  // to match for all forms.
-  return array(
+  $forms = array(
     'CRM_Profile_Form_Edit',
     'CRM_Event_Form_Registration_Register',
     'CRM_Contribute_Form_Contribution_Main',
     'CRM_Profile_Form_Dynamic',
     'CRM_Event_Form_Registration_AdditionalParticipant',
   );
+
+  // Allow user to add their own forms to the above list
+  // Could allow more advanced features e.g. wildcards / regex / match all or exclude forms
+  $additionalForms = _publicautocomplete_get_setting('additionalForms');
+
+  if (is_array($additionalForms))
+  {
+    $forms = array_merge($forms, $additionalForms);
+  }
+  elseif (!empty($additionalForms))
+  {
+    $forms[] = $additionalForms;
+  }
+
+  return $forms;
 }
 
 /**
