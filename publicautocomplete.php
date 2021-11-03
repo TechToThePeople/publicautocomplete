@@ -18,15 +18,15 @@ function _publicautocomplete_supported_forms() {
 
   // Allow user to add their own forms to the above list
   // Could allow more advanced features e.g. wildcards / regex / match all or exclude forms
-  $additionalForms = _publicautocomplete_get_setting('additionalForms');
+  $additional_forms = _publicautocomplete_get_setting('additional_forms');
 
-  if (is_array($additionalForms))
+  if (is_array($additional_forms))
   {
-    $forms = array_merge($forms, $additionalForms);
+    $forms = array_merge($forms, $additional_forms);
   }
-  elseif (!empty($additionalForms))
+  elseif (!empty($additional_forms))
   {
-    $forms[] = $additionalForms;
+    $forms[] = $additional_forms;
   }
 
   return $forms;
