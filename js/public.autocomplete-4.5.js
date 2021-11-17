@@ -63,6 +63,7 @@ var publicautocomplete = {
 cj(function($) {
   // Apply jQuery autocomplete to the current_employer field.
   $('#current_employer').autocomplete({
+    minLength: CRM.vars['eu.tttp.publicautocomplete'].min_length,
     source: function(request, response) {
       CRM.api3('contact', 'getpublic', {'term': request.term}).done(function(result) {
         // Initialize the list of autocomplete options.

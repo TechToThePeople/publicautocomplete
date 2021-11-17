@@ -55,6 +55,7 @@ function _publicautocomplete_get_setting($name) {
       'require_match' => FALSE,
       'integer_matches' => array(),
       'accept_existing_value' => TRUE,
+      'min_length' => 0,
     );
 
     foreach ($defaults as $key => $value) {
@@ -134,6 +135,7 @@ function publicautocomplete_civicrm_buildForm($formName, &$form) {
   $vars = array(
     'return_properties' => $return_properties,
     'require_match' => _publicautocomplete_get_setting('require_match'),
+    'min_length' => _publicautocomplete_get_setting('min_length'),
     'required_error' => E::ts('%1 must be an existing organization name.', array(1 => $form->_fields['current_employer']['title'])),
   );
 

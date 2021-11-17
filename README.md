@@ -81,6 +81,12 @@ By default, the user may submit the field with its existing value, even if requi
 global $civicrm_setting;
 $civicrm_setting['eu.tttp.publicautocomplete']['accept_existing_value'] = FALSE;
 ```
+### min_length
+By default, there is no minimum length for the entered search string, so a user may
+find may results by typing a single character. (And if the character is '%', the user
+may find all results.) This may be undesirable for reasons of privacy or usability.
+Specify an integer for min_length to require a minimum number of characters for
+the search string.
 
 ### Anything else
 If you need something else or want to debug, you can modify the api/v3/Contact/Publicget.php and do whatever you want.
