@@ -4,7 +4,14 @@
  * open to anonyous visitors. You can customise it, but be aware of the
  * potential security risks of exposing more than you want to.
  */
+
+/**
+ * contact.getpublic api definition.
+ */
 function civicrm_api3_contact_getpublic($params) {
+  // Validate params.
+  _civicrm_api3_contact_getpublic_validate($params);
+
   $term = $params['term'];
   $custom = _publicautocomplete_get_setting('params');
 
@@ -68,7 +75,7 @@ function civicrm_api3_contact_getpublic($params) {
       // If there's any error, just return this search result now.
       return $current_user_existing_employer_ret;
     }
-    else if (
+    elseif (
       (!empty($current_user_existing_employer_ret['values'][0]['current_employer'])) &&
       (stristr($current_user_existing_employer_ret['values'][0]['current_employer'], $term) !== FALSE)
     ) {
@@ -147,4 +154,32 @@ function _civicrm_api3_contact_getpublic_by_contact_id($integer) {
   $custom['id'] = $integer;
   $result = civicrm_api('contact', 'Get', $custom);
   return $result;
+}
+
+/**
+ * Collapse duplicate wildcards, and trim wildcards, in search term; required for
+ * validation of term length against min_length setting.
+ *
+ * @param String $term
+ * @return String
+ */
+function _civicrm_api3_contact_getpublic_collapse_wildcards($term) {
+  $term = preg_replace('/%+/', '%', $term);
+  $term = preg_replace('/(^%+|%+$)/', '', $term);
+  return $term;
+}
+
+/**
+ * Ensure params are valid.
+ *
+ * @param Array $params
+ * @throws CiviCRM_API3_Exception
+ */
+function _civicrm_api3_contact_getpublic_validate($params) {
+  // Collapse wildcards in order to properly test min_length validation.
+  $term = _civicrm_api3_contact_getpublic_collapse_wildcards($params['term']);
+  $min_length = _publicautocomplete_get_setting('min_length');
+  if (($len = strlen($term)) < $min_length) {
+    throw new CiviCRM_API3_Exception('Search term does not meet min_length requirement.', 'min_length_not_met');
+  }
 }

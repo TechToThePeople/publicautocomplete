@@ -57,6 +57,10 @@ var publicautocomplete = {
     console.log('clearInvalidStyling');
     cj('#current_employer').removeClass('publicautocomplete-invalid');
     return true;
+  },
+
+  'collapseWildcards': function collapseWildcards(term) {
+    return term.replace(/%+/, '%').replace(/(^%+|%+$)/g, '');
   }
 };
 
@@ -65,24 +69,31 @@ cj(function($) {
   $('#current_employer').autocomplete({
     minLength: CRM.vars['eu.tttp.publicautocomplete'].min_length,
     source: function(request, response) {
-      CRM.api3('contact', 'getpublic', {'term': request.term}).done(function(result) {
-        // Initialize the list of autocomplete options.
-        ret = [];
-        if (result.count > 0) {
-          // Loop through the values returned by the AJAX call.
-          $.each(result.values, function(k, v) {            
-            var label = publicautocomplete.buildLabel(v, CRM.vars['eu.tttp.publicautocomplete'].return_properties);
-            var value = v[CRM.vars['eu.tttp.publicautocomplete'].return_properties[0]];
-            // Store the value in the matchedValues array so we can use it for
-            // validation in isValid().
-            publicautocomplete.matchedValues[value] = true;
-            // Add the value/label pair to the list of autocomplete options.
-            ret.push({'value': value, 'label': label});
-          });
-        }
-        // Return the list of autocomplete options.
-        response(ret);
-      });
+      var term = publicautocomplete.collapseWildcards(request.term);
+      if (term.length < CRM.vars['eu.tttp.publicautocomplete'].min_length) {
+        // min_length not met; therefore respond with empty array.
+        response([]);
+      }
+      else {
+          CRM.api3('contact', 'getpublic', {'term': term}).done(function(result) {
+          // Initialize the list of autocomplete options.
+          ret = [];
+          if (result.count > 0) {
+            // Loop through the values returned by the AJAX call.
+            $.each(result.values, function(k, v) {
+              var label = publicautocomplete.buildLabel(v, CRM.vars['eu.tttp.publicautocomplete'].return_properties);
+              var value = v[CRM.vars['eu.tttp.publicautocomplete'].return_properties[0]];
+              // Store the value in the matchedValues array so we can use it for
+              // validation in isValid().
+              publicautocomplete.matchedValues[value] = true;
+              // Add the value/label pair to the list of autocomplete options.
+              ret.push({'value': value, 'label': label});
+            });
+          }
+          // Return the list of autocomplete options.
+          response(ret);
+        });
+      }
     }
   });
 
