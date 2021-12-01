@@ -88,6 +88,21 @@ may find all results.) This may be undesirable for reasons of privacy or usabili
 Specify an integer for min_length to require a minimum number of characters for
 the search string.
 
+### additional_forms
+If you want to add form class names for which to enable the autocomplete feature (beyond the built-in list), you can specify these as a string (single form name) or array (list of form names). Particularly useful if you have third-party extensions that create their own forms. For example:
+```php
+global $civicrm_setting;
+$civicrm_setting['eu.tttp.publicautocomplete']['additional_forms'] = 'CRM_Entity_Form_Type';
+```
+Or:
+```php
+global $civicrm_setting;
+$civicrm_setting['eu.tttp.publicautocomplete']['additional_forms'] = array(
+  'CRM_Entity1_Form_Type1',
+  'CRM_Entity2_Form_Type2',
+);
+```
+
 ### Anything else
 If you need something else or want to debug, you can modify the api/v3/Contact/Publicget.php and do whatever you want.
 
