@@ -33,7 +33,7 @@ function civicrm_api3_contact_getpublic($params) {
     );
   }
 
-  $ret = civicrm_api('Contact', 'Get', $custom);
+  $ret = civicrm_api3('Contact', 'Get', $custom);
 
   if ($ret['is_error']) {
     // If there's any error, return now.
@@ -70,7 +70,7 @@ function civicrm_api3_contact_getpublic($params) {
       'sequential' => 1,
       'return.current_employer' => 1,
     );
-    $current_user_existing_employer_ret = civicrm_api('Contact', 'Get', $current_user_existing_employer_custom);
+    $current_user_existing_employer_ret = civicrm_api3('Contact', 'Get', $current_user_existing_employer_custom);
     if ($current_user_existing_employer_ret['is_error']) {
       // If there's any error, just return this search result now.
       return $current_user_existing_employer_ret;
@@ -86,7 +86,7 @@ function civicrm_api3_contact_getpublic($params) {
         'contact_type' => $custom['contact_type'],
         'organization_name' => $current_user_existing_employer_ret['values'][0]['current_employer'],
       );
-      $existing_employer_ret = civicrm_api('Contact', 'Get', $existing_employer_custom);
+      $existing_employer_ret = civicrm_api3('Contact', 'Get', $existing_employer_custom);
       if ($existing_employer_ret['is_error']) {
         // If there's any error, just return this search result now.
         return $existing_employer_ret;
@@ -119,7 +119,7 @@ function _civicrm_api3_contact_getpublic_by_entity_integer($integer, $entity) {
   // about the entity itself, just the contact.
   unset($custom['return']);
 
-  $result = civicrm_api($entity, 'Get', $custom);
+  $result = civicrm_api3($entity, 'Get', $custom);
   // If the API result is an error, just return the result now.
   if ($result['is_error']) {
     return $result;
@@ -152,7 +152,7 @@ function _civicrm_api3_contact_getpublic_by_entity_integer($integer, $entity) {
 function _civicrm_api3_contact_getpublic_by_contact_id($integer) {
   $custom = _publicautocomplete_get_setting('params');
   $custom['id'] = $integer;
-  $result = civicrm_api('contact', 'Get', $custom);
+  $result = civicrm_api3('contact', 'Get', $custom);
   return $result;
 }
 
