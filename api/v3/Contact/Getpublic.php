@@ -76,8 +76,9 @@ function civicrm_api3_contact_getpublic($params) {
       return $current_user_existing_employer_ret;
     }
     elseif (
-      (!empty($current_user_existing_employer_ret['values'][0]['current_employer'])) &&
-      (stristr($current_user_existing_employer_ret['values'][0]['current_employer'], $term) !== FALSE)
+      // Guard against passing empty $term to stristr() - can use empty() here because numeric input (i.e. zero) handled above
+      (!empty($current_user_existing_employer_ret['values'][0]['current_employer'])) && (!empty($term)) &&
+      (stristr($current_user_existing_employer_ret['values'][0]['current_employer'], (string) $term) !== FALSE)
     ) {
       $existing_employer_custom = array(
         'return' => $custom['return'],
