@@ -75,7 +75,10 @@ cj(function($) {
         response([]);
       }
       else {
-          CRM.api3('contact', 'getpublic', {'term': term}).done(function(result) {
+        var oldIsFrontend = CRM.config.isFrontend;
+        CRM.config.isFrontend = true;
+        CRM.api3('contact', 'getpublic', {'term': term}).done(function(result) {
+          CRM.config.isFrontend = oldIsFrontend;
           // Initialize the list of autocomplete options.
           ret = [];
           if (result.count > 0) {
@@ -92,6 +95,8 @@ cj(function($) {
           }
           // Return the list of autocomplete options.
           response(ret);
+        }).fail(function() {
+          CRM.config.isFrontend = oldIsFrontend;
         });
       }
     }
@@ -122,7 +127,10 @@ cj(function($) {
     // so we can use it for validation in isValid().
     var initialValue = $('#current_employer').val();
     if (initialValue.length) {
+      var oldIsFrontend = CRM.config.isFrontend;
+      CRM.config.isFrontend = true;
       CRM.api3('contact', 'getpublic', {'term': initialValue}).done(function(result) {
+        CRM.config.isFrontend = oldIsFrontend;
         if (result.count > 0) {
           // Loop through the values returned by the AJAX call.
           $.each(result.values, function(k, v) {
@@ -130,6 +138,8 @@ cj(function($) {
             publicautocomplete.matchedValues[value] = true;
           });
         }
+      }).fail(function() {
+        CRM.config.isFrontend = oldIsFrontend;
       });
     }
   }
