@@ -40,7 +40,7 @@ function _publicautocomplete_validate_current_employer($organization_name) {
   $custom = array();
   $custom['term'] = $organization_name;
   $custom['version'] = 3;
-  $result = civicrm_api('Contact', 'getpublic', $custom);
+  $result = civicrm_api3('Contact', 'getpublic', $custom);
 
   $full_matches = array_filter($result['values'], function($item) use ($organization_name, $name_column) {
     return ($item[$name_column] == $organization_name);
