@@ -12,7 +12,7 @@ function civicrm_api3_contact_getpublic($params) {
   // Validate params.
   _civicrm_api3_contact_getpublic_validate($params);
 
-  $term = $params['term'];
+  $term = (string) $params['term'];
   $custom = _publicautocomplete_get_setting('params');
 
   // Determine column to search in, defaulting to sort_name.
@@ -77,6 +77,7 @@ function civicrm_api3_contact_getpublic($params) {
     }
     elseif (
       (!empty($current_user_existing_employer_ret['values'][0]['current_employer'])) &&
+      (!empty($term)) &&
       (stristr($current_user_existing_employer_ret['values'][0]['current_employer'], $term) !== FALSE)
     ) {
       $existing_employer_custom = array(
