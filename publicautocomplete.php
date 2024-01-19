@@ -94,8 +94,7 @@ function _publicautocomplete_get_setting($name) {
  * Add given key-value pairs to CRM object in Javasript.
  */
 function _publicautocomplete_setupJavascript($vars) {
-  $resource = CRM_Core_Resources::singleton();
-  $resource->addCoreResources();
+  $resource = Civi::resources();
 
   // Fix bug on AJAX call to include js file
   CRM_Core_Region::instance('page-footer')->add([
