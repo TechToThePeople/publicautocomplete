@@ -1,3 +1,6 @@
+[**the development of this extension has moved to civicrm gitlab instance**](https://lab.civicrm.org/extensions/publicautocomplete)
+
+
 publicautocomplete
 ==================
 
