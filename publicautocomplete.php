@@ -54,8 +54,10 @@ function _publicautocomplete_validate_current_employer($organization_name) {
 function _publicautocomplete_get_setting($name) {
   // If this is the  first time, prime a $settings array with the default values,
   // overridden with any values found by CRM_Core_BAO_Setting::getItem().
-  static $settings = array();
-  if (empty($settings)) {
+  if (empty(Civi::$statics[__FUNCTION__])
+    && empty(Civi::$statics[__FUNCTION__]['settings'])
+  ) {
+    $settings = [];
     $defaults = array(
       'params' => array(
         'return' => 'organization_name',
@@ -85,9 +87,10 @@ function _publicautocomplete_get_setting($name) {
     $settings['params']['sequential'] = 0;
     $settings['params']['version'] = 3;
     $settings['params']['contact_type'] = 'organization';
+    Civi::$statics[__FUNCTION__]['settings'] = $settings;
   }
 
-  return $settings[$name];
+  return Civi::$statics[__FUNCTION__]['settings'][$name];
 }
 
 /**
